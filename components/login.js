@@ -1,17 +1,20 @@
 import { Form, Input, Button, Checkbox } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { useRouter } from 'next/router'
 import axios from 'axios'
 import style from '../styles/form.module.scss'
 
 
 export default function LogInForm({ hide }) {
+  const router = useRouter();
   const onFinish = (values) => {
     axios({
       method: 'POST',
-      url: `${window.location.href}api/login`,
+      url: '/api/login',
       data: { ...values },
+      withCredentials: true
     }).then((response) => {
-      console.log(response);
+      router.push('/dashboard')
     }).catch((error) => {
       console.log(error);
     })

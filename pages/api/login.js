@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import { compare } from 'bcrypt'
 import db from '../../lib/db'
 import { sign } from 'jsonwebtoken'
 import cookie from 'cookie'
@@ -16,7 +16,7 @@ export default async (req, res) => {
     const { rows } = await db('SELECT id, email, hash from "user" where email=$1', [email])
 
     if (rows.length > 0) {
-      const isEqual = await bcrypt.compare(password, rows[0].hash)
+      const isEqual = await compare(password, rows[0].hash)
       if (isEqual) {
 
         const token = sign({
@@ -27,14 +27,13 @@ export default async (req, res) => {
         res.setHeader('Set-Cookie', cookie.serialize('authentication', token,
           {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: 'strict',
             maxAge: ONE_HOUR,
-            path:'/'
+            path: '/'
           }))
 
-        res.status(200).json({ authToken: token })
-
+        res.status(200).json({ message: 'Authentication successful' })
         return
       }
     }
