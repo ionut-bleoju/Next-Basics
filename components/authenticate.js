@@ -1,18 +1,21 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import cookie from 'cookie'
-import jwt from 'jsonwebtoken'
+import { parse } from 'cookie'
+import { verify } from 'jsonwebtoken'
+import secret from '../lib/secret'
+
+import axios from 'axios'
 
 export default (OriginalComponent) => {
 
   const Authenticate = (props) => {
-    const router = useRouter();
+    const router = useRouter()
 
     useEffect(() => {
       if (!props.isAuthenticated) {
-        // setTimeout(() => {
-        //   router.push('/')
-        // }, 1000);
+        setTimeout(() => {
+          router.push('/')
+        }, 2000);
       }
     }, [])
 
@@ -28,22 +31,31 @@ export default (OriginalComponent) => {
   }
 
   Authenticate.getInitialProps = async (context) => {
-    let isAuthenticated = false;
-    console.log(context)
+    let isAuthenticated = false
+    let pageProps = {}
+
+    if (OriginalComponent.getInitialProps) {
+      pageProps = await OriginalComponent.getInitialProps(context)
+    }
 
     if (context.req && context.req.headers.cookie) {
-      //Server
-      const token = cookie.parse(context.req.headers.cookie)
+      const token = parse(context.req.headers.cookie)
 
-      if (jwt.verify(token.authentication, 'someSupeRsECRET')) {
+      if (verify(token.authentication, secrete)) {
         isAuthenticated = true
       }
     } else {
-      //Client to do
+      const { data } = await axios({
+        method: 'GET',
+        url: '/api/check-auth',
+        withCredentials: true
+      })
+      isAuthenticated = data.isAuthenticated
     }
 
     return {
-      isAuthenticated
+      isAuthenticated,
+      ...pageProps
     }
   }
 
