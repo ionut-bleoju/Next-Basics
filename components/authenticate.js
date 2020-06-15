@@ -1,10 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { parse } from 'cookie'
-import { verify } from 'jsonwebtoken'
-import secret from '../lib/secret'
-
-import axios from 'axios'
+import AuthChecker from 'AuthChecker'
 
 export default (OriginalComponent) => {
 
@@ -38,20 +34,7 @@ export default (OriginalComponent) => {
       pageProps = await OriginalComponent.getInitialProps(context)
     }
 
-    if (context.req && context.req.headers.cookie) {
-      const token = parse(context.req.headers.cookie)
-
-      if (verify(token.authentication, secret)) {
-        isAuthenticated = true
-      }
-    } else {
-      const { data } = await axios({
-        method: 'GET',
-        url: '/api/check-auth',
-        withCredentials: true
-      })
-      isAuthenticated = data.isAuthenticated
-    }
+    isAuthenticated = await AuthChecker(context)
 
     return {
       isAuthenticated,
