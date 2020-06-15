@@ -1,8 +1,8 @@
 import { compare } from 'bcrypt'
-import db from '../../lib/db'
+import { getUserByEmail } from '../../lib/user'
 import { sign } from 'jsonwebtoken'
 import cookie from 'cookie'
-import secrete from '../../lib/secret'
+import secret from '../../lib/secret'
 
 const ONE_HOUR = 60 * 60 * 1;
 
@@ -15,16 +15,16 @@ export default async (req, res) => {
     }
 
     try {
-      const { rows } = await db('SELECT id, email, hash from "user" where email=$1', [email])
+      let user = await getUserByEmail(email)
 
-      if (rows.length > 0) {
-        const isEqual = await compare(password, rows[0].hash)
+      if (user) {
+        const isEqual = await compare(password, user.hash)
         if (isEqual) {
 
           const token = sign({
-            sub: rows.id,
-            email: rows.email
-          }, secrete, { expiresIn: ONE_HOUR })
+            sub: user.id,
+            email: user.email
+          }, secret, { expiresIn: ONE_HOUR })
 
           res.setHeader('Set-Cookie', cookie.serialize('authentication', token,
             {
@@ -47,7 +47,7 @@ export default async (req, res) => {
       res.status(500)
     }
   } else {
-    res.status(405).json({message: 'Methode not supported'})
+    res.status(405).json({ message: 'Methode not supported' })
   }
 
 }
