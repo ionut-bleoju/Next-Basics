@@ -1,12 +1,12 @@
 import { verify } from 'jsonwebtoken'
 import { parse } from 'cookie'
-import secrete from '../../lib/secret'
+import secret from '../../lib/secret'
 
 export default (req, res) => {
   if (req.method === 'GET') {
     const token = parse(req.headers.cookie).authentication
 
-    if (token && verify(token, secrete)) {
+    if (token && verify(token, secret)) {
       res.status(200).json({ isAuthenticated: true })
       return
     }

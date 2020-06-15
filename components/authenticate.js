@@ -41,7 +41,7 @@ export default (OriginalComponent) => {
     if (context.req && context.req.headers.cookie) {
       const token = parse(context.req.headers.cookie)
 
-      if (verify(token.authentication, secrete)) {
+      if (verify(token.authentication, secret)) {
         isAuthenticated = true
       }
     } else {
