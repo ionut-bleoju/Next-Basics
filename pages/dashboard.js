@@ -1,5 +1,3 @@
-import cookie from 'cookie'
-import jwt from 'jsonwebtoken'
 import RequireAuth from '../components/authenticate';
 
  function Dashboard() {
@@ -11,6 +9,3 @@ import RequireAuth from '../components/authenticate';
 }
 
 export default RequireAuth(Dashboard)
-
-// middlewere logare
-// din request , la fiecare request hoc , app , gip
