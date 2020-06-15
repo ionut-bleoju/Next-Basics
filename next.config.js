@@ -5,14 +5,13 @@ module.exports = {
         // Note: we provide webpack above so you should not `require` it
         // Perform customizations to webpack config
         // Important: return the modified config
-        console.log(path.join(__dirname, 'lib/serverChecker.js'));
         config.plugins.push(new webpack.IgnorePlugin(/\/__tests__\//))
 
         config.resolve = {
             ...config.resolve,
             alias: {
                 ...config.resolve.alias,
-                AuthChecker: isServer ? path.join(__dirname,'lib/serverChecker.js') : path.join(__dirname, 'lib/clientChecker.js'),
+                AuthChecker: isServer ? path.join(__dirname,'./lib/serverChecker.js') : path.join(__dirname, './lib/clientChecker.js'),
             }
         }
 
