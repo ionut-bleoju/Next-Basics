@@ -1,10 +1,11 @@
 import RequireAuth from '../components/authenticate';
+import Layout from '../components/layout'
 
- function Dashboard() {
+function Dashboard() {
   return (
-    <div>
+    <Layout>
       Dashboard
-    </div>
+    </Layout>
   )
 }
 

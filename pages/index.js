@@ -12,7 +12,9 @@ export default function Home() {
 
     return (
         <Layout>
-            {logIn ? <LogInForm hide={changeDispleydForm} /> : <SignInForm hide={changeDispleydForm} />}
+            <div style={{display:'flex', justifyContent:'center'}}>
+                {logIn ? <LogInForm hide={changeDispleydForm} /> : <SignInForm hide={changeDispleydForm} />}
+            </div>
         </Layout>
     )
 }

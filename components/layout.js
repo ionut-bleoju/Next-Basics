@@ -1,17 +1,21 @@
 import Head from 'next/head'
+import Navbar from './navbar'
 import style from '../styles/layout.module.scss'
 
 export default function Layout({ children }) {
   return (
-    <div>
+    <div className={style.container}>
       <Head>
         <title>Next Recap</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={style.container}>
+      <header>
+        <Navbar />
+      </header>
+      <main >
         {children}
       </main >
+      <footer />
     </div >
   )
 

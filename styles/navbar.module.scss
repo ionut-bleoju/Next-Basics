@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.logo {
+  display: flex;
+  background-color: white;
+  align-content: center;
+  border-bottom: 1px solid #f0f0f0;
+  padding-left: 15px;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.list {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  padding-right: 15px;
+
+  a {
+    display: none;
+    @media (min-width: 768px) {
+      display: inline-block;
+    }
+  }
+}
