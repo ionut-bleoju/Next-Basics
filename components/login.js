@@ -1,12 +1,15 @@
-import { Form, Input, Button, Checkbox } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import style from '../styles/form.module.scss'
+import { Form, Input, Button, Checkbox } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import styles from '../styles/form.module.scss'
 
 
 export default function LogInForm({ hide }) {
   const router = useRouter();
+  const [status, setStatus] = useState({ error: null, message: null })
+
   const onFinish = (values) => {
     axios({
       method: 'POST',
@@ -14,15 +17,16 @@ export default function LogInForm({ hide }) {
       data: { ...values },
       withCredentials: true
     }).then((response) => {
+      setStatus({ error: false, message: 'Welcome' })
       router.push('/dashboard')
     }).catch((error) => {
-      console.log(error);
+      setStatus({ error: true, message: error.response.data.message })
     })
   }
 
   return (
-    <div className={style.container}>
-      <h2 className={style.title}>LogIn</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>LogIn</h2>
       <Form
         name="logIn"
         onFinish={onFinish}
@@ -72,6 +76,7 @@ export default function LogInForm({ hide }) {
         </Form.Item>
 
         <Form.Item>
+          <div className={status.error ? styles.error : styles.success} style={status.message ? {} : { display: 'none' }}>{status.message}</div>
           <Button type="link" htmlType="button" style={{ width: "100%" }} onClick={hide}>
             Sign In
           </Button>

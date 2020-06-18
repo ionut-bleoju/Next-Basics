@@ -1,26 +1,29 @@
+import { useState } from 'react'
 import { Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import style from '../styles/form.module.scss'
+import styles from '../styles/form.module.scss'
 
 
 export default function SignInForm({ hide }) {
+  const [status, setStatus] = useState({ error: null, message: null })
+
   const onFinish = (values) => {
     axios({
       method: 'POST',
       url: `${window.location.href}api/signin`,
       data: { ...values }
     }).then((response) => {
-      console.log(response);
+      setStatus({ error: false, message: 'Register successfully' })
     }).catch((error) => {
-      console.log(error);
+      setStatus({ error: true, message: error.response.data.message })
     })
 
   }
 
   return (
-    <div className={style.container}>
-      <h2 className={style.title}>SignIn</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>SignIn</h2>
       <Form
         name="signIn"
         onFinish={onFinish}
@@ -72,8 +75,7 @@ export default function SignInForm({ hide }) {
                 if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
-
-                return Promise.reject('Passwords must match!');
+                return Promise.reject('Passwords must match!')
               },
             }),
           ]}
@@ -92,8 +94,10 @@ export default function SignInForm({ hide }) {
         </Form.Item>
 
         <Form.Item>
+          <div className={status.error ? styles.error : styles.success} style={status.message ? {} : { display: 'none' }}>{status.message}</div>
+
           <Button type="link" htmlType="button" style={{ width: "100%" }} onClick={hide}>
-            LogIn In
+            LogIn
           </Button>
         </Form.Item>
       </Form >

@@ -1,10 +1,24 @@
-.container{
+.container {
   padding: 5px 10px 0px;
-  border: 2px solid gray ;
+  border: 2px solid gray;
+
+  & > div:nth-child(-n + 2) {
+    margin-bottom: 15px;
+  }
 }
 
-.title{
+.title {
   margin-bottom: 15px;
 
   text-align: center;
+}
+
+.success {
+  text-align: center;
+  color:rgb(91, 180, 91)
+}
+
+.error{
+  text-align: center;
+  color: rgb(209, 88, 88);
 }
