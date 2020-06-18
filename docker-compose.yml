@@ -1,0 +1,25 @@
+version: '3'
+
+services: 
+    db: 
+      image: postgres
+      restart: always
+      environment: 
+        POSTGRES_PASSWORD: docker
+        POSTGRES_USER: docker
+        POSTGRES_DB: next
+      ports: 
+        - "5433:5432"
+      volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    web:
+      container_name: myapp
+      build: .
+      depends_on: 
+        - db
+      environment: 
+        secrete: some_random_secrete
+        CONNECTION_STRING: postgresql://docker:docker@db:5432/next
+      ports: 
+        - "80:80"
+        - "3000:3000"
