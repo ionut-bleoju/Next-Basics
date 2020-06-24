@@ -1,13 +1,9 @@
-.container {
+.form {
   padding: 5px 10px 0px;
   border: 2px solid gray;
-
-  & > div:nth-child(-n + 2) {
-    margin-bottom: 15px;
-  }
 }
 
-.title {
+.form_title {
   margin-bottom: 15px;
 
   text-align: center;
