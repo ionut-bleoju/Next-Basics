@@ -25,8 +25,8 @@ export default function LogInForm({ hide }) {
   }
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>LogIn</h2>
+    <div className={styles.form}>
+      <h2 className={styles.form_title}>LogIn</h2>
       <Form
         name="logIn"
         onFinish={onFinish}
