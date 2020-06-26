@@ -1,13 +1,11 @@
-import { Card, Spin } from 'antd'
+import { Spin } from 'antd'
 import { useRouter } from 'next/router'
 import { useState, useRef, useEffect } from 'react'
+import styles from '../styles/card.module.scss'
 
-const { Meta } = Card;
 
 export default function PokemonCard(props) {
   const [loaded, setLoaded] = useState(false)
-  const [pokemon, setPokemon] = useState({ index: props.index, name: props.name })
-
   const image = useRef(null)
   const router = useRouter()
 
@@ -17,37 +15,26 @@ export default function PokemonCard(props) {
     }
   }, [loaded])
 
-  useEffect(() => {
-    setPokemon({ index: props.index, name: props.name })
-  }, [props.name])
-
   const handleLoad = () => {
-    1
     setLoaded(true)
   }
 
   return (
-    <Card
+    <div className={styles.card}
       onClick={() => {
-        router.push(`/pokemon/${pokemon.index}`)
+        router.push(`/pokemon/${props.index}`)
       }}
-      hoverable
-      size="small"
-      cover={
-        <div >
-          <Spin spinning={!loaded}>
-            <img
-              ref={image}
-              style={{ textAlign: 'center', maxWidth: '100%', maxHeight: '100px' }}
-              onLoad={handleLoad}
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.index}.png`}
-            />
-          </Spin>
-
-        </div>
-      }
     >
-      <Meta title={pokemon.name} style={{ textAlign: "center" }} />
-    </Card>
+      <div className={styles.card_content} >
+        <Spin spinning={!loaded} />
+        <img
+          style={loaded ? {} : { display: 'none' }}
+          ref={image}
+          onLoad={handleLoad}
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${props.index}.png`}
+        />
+      </div>
+      <div className={styles.card_description} >{props.name}</div>
+    </div>
   )
 }

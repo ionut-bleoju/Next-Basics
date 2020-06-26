@@ -4,12 +4,8 @@ import { Pagination } from 'antd';
 import { getAllPokemons } from '../lib/pokemon'
 import Layout from '../components/layout'
 import PokemonCard from '../components/pokemon-card'
+import styles from '../styles/pokedex.module.scss'
 
-const container = {
-  display: 'grid',
-  gridGap: '10px',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(100px,1fr))',
-}
 
 export default function Pokedex(props) {
   const router = useRouter()
@@ -20,45 +16,46 @@ export default function Pokedex(props) {
   }, [props.pokemons])
 
   const onPageChange = (page) => {
-    console.log('Here', page)
 
     router.push({
       pathname: '/pokedex',
-      query: { page: page },
+      query: { page },
     });
 
   };
 
   return (
     <Layout>
-      <div style={container}>
+      <div className={styles.container}>
         {pokemons.map((pokemon, index) =>
-          <PokemonCard key={pokemon.name} index={(props.currentPage - 1) * 100 + index + 1} name={pokemon.name} />
+          <PokemonCard key={pokemon.name} index={props.initialIndex + index} name={pokemon.name} />
         )}
       </div>
-      <Pagination
-        style={{ padding: '5px', position: 'fixed', bottom: '15px', right: '15px', backgroundColor: 'rgba(80,80,120,0.4)' }}
-        simple
-        current={props.currentPage}
-        onChange={onPageChange}
-        pageSize={100}
-        total={800}
-      />
+      <div
+          className={styles.pagination}
+      >
+        <Pagination
+          simple
+          current={props.currentPage}
+          onChange={onPageChange}
+          pageSize={100}
+          total={800}
+        />
+      </div>
     </Layout >
   )
 }
 
-Pokedex.getInitialProps = async (context) => {
-  let offset = 0;
-
-  if (context.query) {
-    offset = (context.query.page - 1) * 100
-  }
-
+Pokedex.getInitialProps = async ({ query: { page } }) => {
+  const currentPage = Math.min(Math.max(1, page), 8) || 1;
+  const offset = (currentPage - 1) * 100;
   const pokemons = await getAllPokemons(offset)
 
+  console.log(currentPage, offset)
+
   return {
-    currentPage: context.query.page || 0,
+    currentPage,
+    initialIndex: offset + 1,
     pokemons: pokemons
   }
 }
